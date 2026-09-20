@@ -1,0 +1,2995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BHASKAR — Editorial Journal Studio</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-sand: #F9F6F0;
+      --bg-card: #FFFFFF;
+      --text-main: #18191B;
+      --text-muted: #646873;
+      --accent-terracotta: #E05A47;
+      --accent-terracotta-hover: #C84937;
+      --accent-sand-dark: #EFEAE1;
+      --border-light: rgba(24, 25, 27, 0.08);
+      --border-active: rgba(224, 90, 71, 0.4);
+      
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      
+      --shadow-soft: 0 10px 30px -5px rgba(24, 25, 27, 0.05);
+      --shadow-elevated: 0 20px 40px -10px rgba(24, 25, 27, 0.1);
+      --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg-sand);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Reading Progress Bar */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--accent-terracotta);
+      width: 0%;
+      z-index: 9999;
+      transition: width 0.1s ease-out;
+    }
+
+    /* Ambient Animated Background Lights */
+    .ambient-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatLight 18s ease-in-out infinite alternate;
+    }
+
+    .blob-1 {
+      width: 450px;
+      height: 450px;
+      background: #f7d6cd;
+      top: -100px;
+      left: -100px;
+    }
+
+    .blob-2 {
+      width: 500px;
+      height: 500px;
+      background: #e2e8f0;
+      bottom: 10%;
+      right: -100px;
+      animation-delay: -5s;
+    }
+
+    .blob-3 {
+      width: 350px;
+      height: 350px;
+      background: #fef08a;
+      top: 40%;
+      left: 30%;
+      animation-delay: -10s;
+    }
+
+    @keyframes floatLight {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.1); }
+      100% { transform: translate(-40px, 80px) scale(0.95); }
+    }
+
+    /* Custom Cursor Ring */
+    .cursor-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-terracotta);
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor-ring {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid rgba(224, 90, 71, 0.4);
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+
+    /* Ticker Banner */
+    .ticker-wrap {
+      background: var(--text-main);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      overflow: hidden;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    .ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: tickerSlide 30s linear infinite;
+    }
+
+    .ticker-item {
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .ticker-item i {
+      color: var(--accent-terracotta);
+      font-size: 0.65rem;
+    }
+
+    @keyframes tickerSlide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Navigation Bar */
+    .studio-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(249, 246, 240, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-light);
+      z-index: 1000;
+      padding: 1rem 0;
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Logo Emblem Badge */
+    .brand-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-emblem {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 12px rgba(224, 90, 71, 0.25);
+      transition: var(--transition-smooth);
+      transform: rotate(-3deg);
+    }
+
+    .brand-logo-container:hover .brand-emblem {
+      transform: rotate(0deg) scale(1.05);
+      background: var(--text-main);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-tagline {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent-terracotta);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--accent-sand-dark);
+      padding: 0.35rem;
+      border-radius: 100px;
+    }
+
+    .nav-btn {
+      padding: 0.6rem 1.1rem;
+      border-radius: 100px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+    }
+
+    .nav-btn.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: var(--shadow-soft);
+      font-weight: 600;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .nav-btn-secondary {
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.6rem 1rem;
+    }
+
+    .user-pill-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      padding: 0.35rem 0.85rem 0.35rem 0.35rem;
+      border-radius: 100px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: var(--transition-smooth);
+    }
+
+    .user-pill-btn:hover {
+      border-color: var(--border-active);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .user-pill-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .user-pill-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .btn-primary {
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+      padding: 0.75rem 1.5rem;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-terracotta-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(224, 90, 71, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--accent-sand-dark);
+      color: var(--text-main);
+      padding: 0.75rem 1.5rem;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-secondary:hover {
+      background: #e2dad0;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: #fca5a5;
+      color: #991b1b;
+    }
+
+    .ripple-effect {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Notification Toast */
+    #toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toast {
+      background: var(--text-main);
+      color: #FFFFFF;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: var(--shadow-elevated);
+      animation: toastIn 0.3s ease forwards;
+    }
+
+    .toast i {
+      color: var(--accent-terracotta);
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Layout Wrapper */
+    .content-wrapper {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .view-page {
+      display: none;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .view-page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Hero Banner Header */
+    .hero-header {
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto 4rem;
+    }
+
+    .eyebrow-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--accent-terracotta);
+      text-transform: uppercase;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 540px;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 1rem 1.25rem 1rem 3rem;
+      border-radius: 100px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-card);
+      font-size: 0.95rem;
+      outline: none;
+      box-shadow: var(--shadow-soft);
+      transition: var(--transition-smooth);
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-terracotta);
+      box-shadow: 0 0 0 4px rgba(224, 90, 71, 0.1);
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .pill {
+      padding: 0.5rem 1.1rem;
+      border-radius: 100px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-card);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .pill:hover, .pill.active {
+      background: var(--text-main);
+      color: #FFFFFF;
+      border-color: var(--text-main);
+    }
+
+    /* Cards Grid */
+    .journal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .editorial-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+
+    .card-shine {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 60%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    .editorial-card:hover .card-shine {
+      opacity: 1;
+    }
+
+    .editorial-card:hover {
+      box-shadow: var(--shadow-elevated);
+      border-color: var(--border-active);
+    }
+
+    .card-image-wrap {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+    }
+
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .editorial-card:hover .card-image-wrap img {
+      transform: scale(1.05);
+    }
+
+    .card-category {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(24, 25, 27, 0.85);
+      backdrop-filter: blur(8px);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      letter-spacing: 0.5px;
+    }
+
+    .card-body {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      font-family: var(--font-mono);
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+      color: var(--text-main);
+    }
+
+    .card-excerpt {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .author-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .author-avatar-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--accent-terracotta);
+    }
+
+    .author-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .action-icon-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .action-icon-btn:hover, .action-icon-btn.liked {
+      color: var(--accent-terracotta);
+    }
+
+    .heart-burst {
+      animation: heartPulse 0.4s ease-out;
+    }
+
+    @keyframes heartPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+
+    /* Auth Views */
+    .auth-card {
+      max-width: 480px;
+      margin: 2rem auto;
+      background: var(--bg-card);
+      padding: 3rem 2.5rem;
+      border-radius: 24px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .auth-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent-terracotta);
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    .auth-header h2 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+
+    .auth-header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.85rem 1.1rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-sand);
+      font-size: 0.95rem;
+      outline: none;
+      font-family: inherit;
+      transition: var(--transition-smooth);
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-terracotta);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(224, 90, 71, 0.1);
+    }
+
+    .form-row.flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: var(--accent-terracotta);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .full-width {
+      width: 100%;
+      padding: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .auth-footer a {
+      color: var(--accent-terracotta);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* Profile Edit Layout */
+    .profile-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 3rem;
+      border-radius: 24px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .profile-header-preview {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .profile-avatar-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .profile-header-info h3 {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+    }
+
+    .profile-header-info p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Dashboard View */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+    }
+
+    .dashboard-header h2 {
+      font-family: var(--font-serif);
+      font-size: 2.4rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      padding: 1.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: var(--accent-sand-dark);
+      color: var(--accent-terracotta);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .stat-value {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border-radius: 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-header h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+    }
+
+    .table-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .data-table th {
+      padding: 1rem 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border-light);
+      background: var(--bg-sand);
+    }
+
+    .data-table td {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 0.9rem;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .badge-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: var(--accent-sand-dark);
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .btn-delete {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      padding: 0.4rem;
+      border-radius: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-delete:hover {
+      background: #fee2e2;
+    }
+
+    /* Create Blog Form */
+    .form-card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 3rem;
+      border-radius: 24px;
+      border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .form-header {
+      margin-bottom: 2rem;
+    }
+
+    .form-header h2 {
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+    }
+
+    .blog-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 180px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Article Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(24, 25, 27, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-container {
+      background: var(--bg-card);
+      max-width: 800px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: 24px;
+      padding: 3rem;
+      position: relative;
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: var(--accent-sand-dark);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .modal-close-btn:hover {
+      background: var(--accent-terracotta);
+      color: #FFFFFF;
+    }
+
+    .modal-hero-img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin: 1.5rem 0;
+    }
+
+    .modal-title {
+      font-family: var(--font-serif);
+      font-size: 2.4rem;
+      line-height: 1.2;
+    }
+
+    .modal-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #2c2e33;
+    }
+
+    /* Footer */
+    .studio-footer {
+      background: var(--text-main);
+      color: #FFFFFF;
+      padding: 4rem 2rem 2rem;
+      margin-top: 5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .footer-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .brand-title {
+      color: #FFFFFF;
+    }
+
+    .footer-brand p {
+      color: #9ca3af;
+      margin-top: 1rem;
+      max-width: 380px;
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .footer-links h4 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      color: var(--accent-terracotta);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links a {
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+    }
+
+    .footer-links a:hover {
+      color: #FFFFFF;
+      transform: translateX(4px);
+    }
+
+    .footer-bottom {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    @media (max-width: 1024px) {
+      .journal-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .journal-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.2rem; }
+      .nav-links { display: none; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .footer-container { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress"></div>
+
+  <!-- Ambient Lights -->
+  <div class="ambient-blob blob-1"></div>
+  <div class="ambient-blob blob-2"></div>
+  <div class="ambient-blob blob-3"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- Ticker Banner -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <div class="ticker-item"><i class="fa-solid fa-sparkles"></i> BHASKAR JOURNAL — FIREBASE REALTIME ENGINE LIVE</div>
+      <div class="ticker-item"><i class="fa-solid fa-circle"></i> EXPLORING THE FRONTIERS OF WEB ARCHITECTURE</div>
+      <div class="ticker-item"><i class="fa-solid fa-sparkles"></i> DESIGN SYSTEMS, CREATIVE CODING & UI PHILOSOPHY</div>
+      <div class="ticker-item"><i class="fa-solid fa-circle"></i> READ AND PUBLISH REALTIME STORIES WITH FIRESTORE persistence</div>
+      <div class="ticker-item"><i class="fa-solid fa-sparkles"></i> BHASKAR JOURNAL — FIREBASE REALTIME ENGINE LIVE</div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="studio-nav">
+    <div class="nav-container">
+      <a href="#" class="brand-logo-container" onclick="switchTab('home'); return false;">
+        <div class="brand-emblem">
+          <i class="fa-solid fa-feather-pointed"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">BHASKAR</span>
+          <span class="brand-tagline">Editorial Studio</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#" id="link-home" class="nav-btn active" onclick="switchTab('home'); return false;">
+          <i class="fa-solid fa-newspaper"></i> Journal
+        </a>
+        <a href="#" id="link-create" class="nav-btn" onclick="switchTab('create'); return false;">
+          <i class="fa-solid fa-pen-nib"></i> Write Story
+        </a>
+        <a href="#" id="link-dashboard" class="nav-btn" onclick="switchTab('dashboard'); return false;">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+      </nav>
+
+      <div class="nav-actions" id="nav-actions">
+        <!-- Injected via JavaScript based on Auth state -->
+      </div>
+    </div>
+  </header>
+
+  <div id="toast-container"></div>
+
+  <main class="content-wrapper">
+
+    <!-- HOME VIEW -->
+    <section id="page-home" class="view-page active">
+      <header class="hero-header">
+        <span class="eyebrow-tag">NORDIC EDITORIAL STUDIO</span>
+        <h1 class="hero-title">Thoughts on Design, Code, & Software Craftsmanship.</h1>
+        <p class="hero-subtitle">Curated essays, technical breakdowns, and reflections on modern web engineering, editorial design, and spatial UI philosophy.</p>
+        
+        <div class="hero-controls">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="search-input" placeholder="Search stories, topics, or keywords..." oninput="handleSearch()">
+          </div>
+          <div class="filter-pills" id="category-pills">
+            <button class="pill active" onclick="filterCategory('All')">All Stories</button>
+            <button class="pill" onclick="filterCategory('Web Architecture')">Web Architecture</button>
+            <button class="pill" onclick="filterCategory('Creative Coding')">Creative Coding</button>
+            <button class="pill" onclick="filterCategory('System Design')">System Design</button>
+            <button class="pill" onclick="filterCategory('UI Philosophy')">UI Philosophy</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="journal-grid" id="journal-grid"></div>
+    </section>
+
+    <!-- LOGIN VIEW -->
+    <section id="page-login" class="view-page">
+      <div class="auth-card">
+        <div class="auth-header">
+          <span class="auth-badge">WELCOME BACK</span>
+          <h2>Access Your Studio</h2>
+          <p>Sign in to write essays, track performance, and edit your profile.</p>
+        </div>
+        <form class="auth-form" onsubmit="handleLoginSubmit(event)">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" class="form-input" placeholder="bhaskar@studio.dev" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-input" placeholder="••••••••••••" required>
+          </div>
+          <div class="form-row flex-between">
+            <label class="checkbox-label">
+              <input type="checkbox" checked> Remember this device
+            </label>
+            <a href="#" class="forgot-link">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn-primary full-width">
+            <span>Sign In to Studio</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+        <div class="auth-footer">
+          Don't have an account yet? <a href="#" onclick="switchTab('register'); return false;">Create an Account</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- REGISTER VIEW -->
+    <section id="page-register" class="view-page">
+      <div class="auth-card">
+        <div class="auth-header">
+          <span class="auth-badge">JOIN THE JOURNAL</span>
+          <h2>Create Author Profile</h2>
+          <p>Start publishing articles and building your editorial profile.</p>
+        </div>
+        <form class="auth-form" onsubmit="handleRegisterSubmit(event)">
+          <div class="form-group">
+            <label for="reg-name">Full Name</label>
+            <input type="text" id="reg-name" class="form-input" placeholder="Bhaskar" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="reg-email">Email Address</label>
+              <input type="email" id="reg-email" class="form-input" placeholder="bhaskar@studio.dev" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-age">Age</label>
+              <input type="number" id="reg-age" class="form-input" placeholder="26" min="16" max="100" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reg-role">Role / Headline</label>
+            <input type="text" id="reg-role" class="form-input" placeholder="Senior Frontend Architect & Writer">
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" class="form-input" placeholder="Create a secure password" required>
+          </div>
+          <button type="submit" class="btn-primary full-width">
+            <span>Register Profile</span>
+            <i class="fa-solid fa-user-plus"></i>
+          </button>
+        </form>
+        <div class="auth-footer">
+          Already an author? <a href="#" onclick="switchTab('login'); return false;">Sign In</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE EDIT VIEW -->
+    <section id="page-profile" class="view-page">
+      <div class="profile-card">
+        <div class="profile-header-preview">
+          <img id="profile-avatar-preview" src="" alt="Avatar" class="profile-avatar-large" onerror="this.src='https://placehold.co/100/E05A47/ffffff?text=B'">
+          <div class="profile-header-info">
+            <h3 id="profile-display-name">Bhaskar</h3>
+            <p id="profile-display-role">Author & UI Engineer</p>
+          </div>
+        </div>
+
+        <form class="auth-form" onsubmit="handleProfileSave(event)">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="edit-name">Full Name</label>
+              <input type="text" id="edit-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label for="edit-age">Age</label>
+              <input type="number" id="edit-age" class="form-input" min="16" max="100" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-role">Role / Tagline</label>
+            <input type="text" id="edit-role" class="form-input" placeholder="e.g. Lead Frontend Architect">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-avatar">Profile Picture / Avatar URL</label>
+            <input type="url" id="edit-avatar" class="form-input" placeholder="https://images.unsplash.com/photo-..." oninput="updateAvatarPreview(this.value)">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-bio">Author Bio / Info</label>
+            <textarea id="edit-bio" class="form-input form-textarea" rows="4" placeholder="Write a short summary about yourself..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="switchTab('home')">Cancel</button>
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Save Profile Details
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section id="page-dashboard" class="view-page">
+      <div class="dashboard-header">
+        <div>
+          <span class="eyebrow-tag">AUTHOR ANALYTICS</span>
+          <h2>Studio Dashboard</h2>
+        </div>
+        <button class="btn-primary" onclick="switchTab('create')">
+          <i class="fa-solid fa-pen-to-square"></i> Create New Article
+        </button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-newspaper"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Articles</span>
+            <span class="stat-value" id="stat-total-articles">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-eye"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Reader Views</span>
+            <span class="stat-value">148.2k</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-heart"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Community Likes</span>
+            <span class="stat-value" id="stat-total-likes">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header">
+          <div>
+            <h3>Published Stories</h3>
+            <span class="table-subtitle">Manage, edit, or delete existing posts</span>
+          </div>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Author</th>
+              <th>Date</th>
+              <th>Likes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CREATE STORY VIEW -->
+    <section id="page-create" class="view-page">
+      <div class="form-card">
+        <div class="form-header">
+          <span class="eyebrow-tag">NEW PUBLICATION</span>
+          <h2>Draft a New Story</h2>
+          <p>Share your technical insights with the global editorial audience.</p>
+        </div>
+
+        <form class="blog-form" onsubmit="handleCreateBlog(event)">
+          <div class="form-group">
+            <label for="post-title">Story Title</label>
+            <input type="text" id="post-title" class="form-input" placeholder="e.g., Designing Scalable Micro-Frontends in 2026" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="post-category">Category</label>
+              <select id="post-category" class="form-input" required>
+                <option value="Web Architecture">Web Architecture</option>
+                <option value="Creative Coding">Creative Coding</option>
+                <option value="System Design">System Design</option>
+                <option value="UI Philosophy">UI Philosophy</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="post-read-time">Read Time (minutes)</label>
+              <input type="number" id="post-read-time" class="form-input" placeholder="e.g., 6" min="1" max="60" value="5" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="post-image">Cover Image URL</label>
+            <input type="url" id="post-image" class="form-input" placeholder="https://images.unsplash.com/photo-..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="post-excerpt">Short Excerpt / Teaser Summary</label>
+            <input type="text" id="post-excerpt" class="form-input" placeholder="Brief 1-2 sentence overview for card preview..." required>
+          </div>
+
+          <div class="form-group">
+            <label for="post-content">Story Body (Markdown or Text)</label>
+            <textarea id="post-content" class="form-input form-textarea" placeholder="Write your full article essay here..." rows="8" required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="switchTab('home')">Cancel</button>
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-paper-plane"></i> Publish Story
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Article View Modal -->
+  <div id="article-modal" class="modal-overlay" onclick="closeArticleModal(event)">
+    <div class="modal-container" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="closeArticleModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="studio-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-logo-container">
+          <div class="brand-emblem"><i class="fa-solid fa-feather-pointed"></i></div>
+          <span class="brand-title">BHASKAR</span>
+        </div>
+        <p>A minimalist publication platform dedicated to clean code, frontend engineering, and spatial UI experiments.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigation</h4>
+        <a href="#" onclick="switchTab('home'); return false;">Home Feed</a>
+        <a href="#" onclick="switchTab('dashboard'); return false;">Dashboard</a>
+        <a href="#" onclick="switchTab('create'); return false;">Write Article</a>
+      </div>
+      <div class="footer-links">
+        <h4>Connect</h4>
+        <a href="https://github.com" target="_blank"><i class="fa-brands fa-github"></i> GitHub Repository</a>
+        <a href="https://linkedin.com" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn Profile</a>
+        <a href="https://twitter.com" target="_blank"><i class="fa-brands fa-x-twitter"></i> Twitter / X</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BHASKAR JOURNAL — Nordic Editorial Studio powered by Firebase Realtime Engine.</p>
+    </div>
+  </footer>
+
+  <!-- Firebase SDK Imports & Main Script -->
+  <script>
+  // ============================================================
+  // BHASKAR JOURNAL — LOCAL-FIRST DATA ENGINE
+  // Firebase has been removed from the loading process so the
+  // website works directly with VS Code Live Server.
+  // ============================================================
+
+  // ------------------------------------------------------------
+  // DEFAULT ARTICLES
+  // ------------------------------------------------------------
+  const initialSeedPosts = [
+    {
+      id: 'article-1',
+      title: 'The Modern Monolith: Rethinking Micro-Frontends in 2026',
+      category: 'Web Architecture',
+      author: 'Bhaskar',
+      date: 'Sep 18, 2026',
+      readTime: 6,
+      excerpt: 'Distributed frontend systems brought immense complexity. Why top engineering teams are migrating back to unified modular monoliths.',
+      image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80',
+      likes: 142,
+      isLiked: false,
+      createdAt: new Date('2026-09-18').getTime(),
+      content: `
+        <p>Over the past decade, micro-frontends promised organizational independence and decoupled deployments. However, as web applications grew in scale, operational overhead, duplicated bundle sizes, and fragmented design tokens created significant friction.</p>
+        <br>
+        <p>In 2026, web architecture is witnessing a return to the <strong>Modern Monolith</strong>—a unified codebase empowered by strict domain boundaries, TypeScript project references, and instant atomic builds.</p>
+      `
+    },
+    {
+      id: 'article-2',
+      title: 'Crafting Tactile User Interfaces with Spatial Micro-Interactions',
+      category: 'Creative Coding',
+      author: 'Bhaskar',
+      date: 'Sep 14, 2026',
+      readTime: 4,
+      excerpt: 'How realistic physics, dynamic lighting, and subtle cursor tracking transform digital screens into tactile experiences.',
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80',
+      likes: 289,
+      isLiked: true,
+      createdAt: new Date('2026-09-14').getTime(),
+      content: `
+        <p>Digital interfaces have shifted away from flat, lifeless layouts toward tactile, responsive surfaces. By incorporating spring physics and dynamic specular lighting that reacts to the reader's cursor, web applications feel organic and alive.</p>
+        <br>
+        <p>Through high-framerate HTML Canvas overlays and fluid motion tokens, interactive editorial design creates memorable immersion.</p>
+      `
+    },
+    {
+      id: 'article-3',
+      title: 'Designing Resilient Distributed State Machines in TypeScript',
+      category: 'System Design',
+      author: 'Bhaskar',
+      date: 'Sep 10, 2026',
+      readTime: 8,
+      excerpt: 'Eliminate illegal application states with deterministic finite state machines for complex enterprise user flows.',
+      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+      likes: 95,
+      isLiked: false,
+      createdAt: new Date('2026-09-10').getTime(),
+      content: `
+        <p>Boolean flags often lead to impossible UI states when combined haphazardly. By formalizing application flows into explicit state machines with TypeScript algebraic data types, developers guarantee type-safe transitions and zero edge-case crashes.</p>
+      `
+    },
+    {
+      id: 'article-4',
+      title: 'The Philosophy of Minimalist Editorial Typography on the Web',
+      category: 'UI Philosophy',
+      author: 'Bhaskar',
+      date: 'Sep 05, 2026',
+      readTime: 5,
+      excerpt: 'Exploring Nordic editorial aesthetics, fluid grid rhythm, serif contrast, and whitespace engineering for high-readability layout systems.',
+      image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80',
+      likes: 210,
+      isLiked: false,
+      createdAt: new Date('2026-09-05').getTime(),
+      content: `
+        <p>Great typography is felt before it is read. By harmonizing wide serif headings with crisp variable sans-serif body fonts, modern digital journals achieve the weight and elegance of print publishing without sacrificing fluid responsiveness on mobile devices.</p>
+      `
+    },
+    {
+      id: 'article-5',
+      title: 'Edge Computing & Real-Time Sync Engines for Interactive Web Apps',
+      category: 'Web Architecture',
+      author: 'Bhaskar',
+      date: 'Aug 29, 2026',
+      readTime: 7,
+      excerpt: 'How serverless edge networks and distributed Firestore listeners enable zero-latency collaborative experiences globally.',
+      image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+      likes: 178,
+      isLiked: false,
+      createdAt: new Date('2026-08-29').getTime(),
+      content: `
+        <p>By combining multi-region document databases with immediate optimistic client updates, web applications achieve seamless offline persistence and dynamic real-time synchronization across hundreds of concurrent user sessions.</p>
+      `
+    }
+  ];
+
+
+  // ------------------------------------------------------------
+  // LOCAL STORAGE
+  // ------------------------------------------------------------
+
+  const POSTS_STORAGE_KEY = 'bhaskar_journal_posts';
+
+  function loadPosts() {
+    try {
+      const savedPosts = localStorage.getItem(POSTS_STORAGE_KEY);
+
+      if (savedPosts) {
+        const parsedPosts = JSON.parse(savedPosts);
+
+        if (Array.isArray(parsedPosts) && parsedPosts.length > 0) {
+          return parsedPosts;
+        }
+      }
+    } catch (error) {
+      console.warn('Could not load saved articles:', error);
+    }
+
+    // First visit — use the original 5 articles
+    localStorage.setItem(
+      POSTS_STORAGE_KEY,
+      JSON.stringify(initialSeedPosts)
+    );
+
+    return [...initialSeedPosts];
+  }
+
+  function savePosts() {
+    try {
+      localStorage.setItem(
+        POSTS_STORAGE_KEY,
+        JSON.stringify(blogPosts)
+      );
+    } catch (error) {
+      console.warn('Could not save articles:', error);
+    }
+  }
+
+
+  // ------------------------------------------------------------
+  // USER DATA
+  // ------------------------------------------------------------
+
+  let currentUser = {
+    name: 'Bhaskar',
+    email: 'bhaskar@studio.dev',
+    age: 26,
+    role: 'Senior UI Architect & Writer',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    bio: 'Exploring front-end architecture, physical computing, and minimalist editorial interfaces.'
+  };
+
+  let isLoggedIn = true;
+
+  // IMPORTANT:
+  // Articles now load locally instead of waiting for Firebase.
+  let blogPosts = loadPosts();
+
+  let activeCategoryFilter = 'All';
+
+
+  // ------------------------------------------------------------
+  // INITIALIZE DATA
+  // ------------------------------------------------------------
+
+  function initAuthAndData() {
+    // No Firebase authentication required for Live Server.
+
+    blogPosts.sort(
+      (a, b) => (b.createdAt || 0) - (a.createdAt || 0)
+    );
+
+    renderJournalFeed();
+    renderDashboardTable();
+  }
+
+
+  // ------------------------------------------------------------
+  // GLOBAL FUNCTIONS
+  // ------------------------------------------------------------
+
+  window.switchTab = switchTab;
+  window.filterCategory = filterCategory;
+  window.handleSearch = handleSearch;
+  window.toggleLike = toggleLike;
+  window.openArticleModal = openArticleModal;
+  window.closeArticleModal = closeArticleModal;
+  window.handleLoginSubmit = handleLoginSubmit;
+  window.handleRegisterSubmit = handleRegisterSubmit;
+  window.handleLogout = handleLogout;
+  window.populateProfileForm = populateProfileForm;
+  window.updateAvatarPreview = updateAvatarPreview;
+  window.handleProfileSave = handleProfileSave;
+  window.handleCreateBlog = handleCreateBlog;
+  window.deletePost = deletePost;
+  window.showToast = showToast;
+
+
+  // ------------------------------------------------------------
+  // DOM READY
+  // ------------------------------------------------------------
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    initAuthAndData();
+
+    updateNavAuthUI();
+    populateProfileForm();
+
+    initCustomCursor();
+    initParallaxEffects();
+    initScrollProgress();
+    initButtonRipples();
+
+  });
+
+
+  // ------------------------------------------------------------
+  // NAVIGATION / AUTH UI
+  // ------------------------------------------------------------
+
+  function updateNavAuthUI() {
+
+    const navActions = document.getElementById('nav-actions');
+
+    if (!navActions) return;
+
+    if (isLoggedIn) {
+
+      navActions.innerHTML = `
+        <div class="user-pill-btn"
+             onclick="switchTab('profile')"
+             title="Edit Profile Details">
+
+          <img
+            src="${currentUser.avatar}"
+            alt="${currentUser.name}"
+            class="user-pill-avatar"
+            onerror="this.src='https://placehold.co/100/E05A47/ffffff?text=${currentUser.name.charAt(0)}'"
+          >
+
+          <span class="user-pill-name">
+            ${currentUser.name}
+          </span>
+
+          <i
+            class="fa-solid fa-gear"
+            style="color: var(--text-muted); font-size: 0.8rem;">
+          </i>
+
+        </div>
+
+        <button
+          class="btn-secondary"
+          style="padding: 0.5rem 1rem; font-size: 0.85rem;"
+          onclick="handleLogout()">
+
+          <i class="fa-solid fa-right-from-bracket"></i>
+          Logout
+
+        </button>
+      `;
+
+    } else {
+
+      navActions.innerHTML = `
+        <a
+          href="#"
+          class="nav-btn-secondary"
+          onclick="switchTab('login'); return false;">
+          Sign In
+        </a>
+
+        <a
+          href="#"
+          class="btn-primary"
+          onclick="switchTab('register'); return false;">
+          Get Started
+        </a>
+      `;
+    }
+  }
+
+
+  // ------------------------------------------------------------
+  // TAB SWITCHING
+  // ------------------------------------------------------------
+
+  function switchTab(tabName) {
+
+    if (
+      (tabName === 'create' || tabName === 'profile') &&
+      !isLoggedIn
+    ) {
+
+      showToast('Please sign in to access this feature.');
+
+      tabName = 'login';
+    }
+
+    const pages = document.querySelectorAll('.view-page');
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    pages.forEach(page => {
+      page.classList.remove('active');
+    });
+
+    navBtns.forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    const targetPage = document.getElementById(`page-${tabName}`);
+
+    if (targetPage) {
+      targetPage.classList.add('active');
+    }
+
+    const activeLink = document.getElementById(`link-${tabName}`);
+
+    if (activeLink) {
+      activeLink.classList.add('active');
+    }
+
+    if (tabName === 'profile') {
+      populateProfileForm();
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
+
+  // ------------------------------------------------------------
+  // RENDER ARTICLE FEED
+  // ------------------------------------------------------------
+
+  function renderJournalFeed() {
+
+    const grid = document.getElementById('journal-grid');
+
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    const searchVal =
+      document.getElementById('search-input')?.value
+        .toLowerCase() || '';
+
+    const filteredPosts = blogPosts.filter(post => {
+
+      const matchesCategory =
+        activeCategoryFilter === 'All' ||
+        post.category === activeCategoryFilter;
+
+      const matchesSearch =
+        (post.title || '')
+          .toLowerCase()
+          .includes(searchVal) ||
+
+        (post.excerpt || '')
+          .toLowerCase()
+          .includes(searchVal) ||
+
+        (post.author || '')
+          .toLowerCase()
+          .includes(searchVal);
+
+      return matchesCategory && matchesSearch;
+    });
+
+
+    if (filteredPosts.length === 0) {
+
+      grid.innerHTML = `
+        <div
+          style="
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 4rem 0;
+            color: var(--text-muted);
+          ">
+
+          <i
+            class="fa-solid fa-folder-open"
+            style="
+              font-size: 3rem;
+              margin-bottom: 1rem;
+              color: var(--accent-terracotta);
+            ">
+          </i>
+
+          <h3>No articles found</h3>
+
+          <p>
+            Try searching for a different keyword or category.
+          </p>
+
+        </div>
+      `;
+
+      return;
+    }
+
+
+    filteredPosts.forEach(post => {
+
+      const card = document.createElement('article');
+
+      card.className = 'editorial-card';
+
+      card.setAttribute(
+        'onclick',
+        `openArticleModal('${post.id}')`
+      );
+
+
+      const isAuthorCurrent =
+        isLoggedIn &&
+        currentUser.name === post.author;
+
+      const avatarSrc =
+        isAuthorCurrent
+          ? currentUser.avatar
+          : '';
+
+
+      card.innerHTML = `
+        <div class="card-shine"></div>
+
+        <div class="card-image-wrap">
+
+          <img
+            src="${post.image}"
+            alt="${post.title}"
+            loading="lazy"
+            onerror="this.src='https://placehold.co/800x500/E05A47/ffffff?text=Article'"
+          >
+
+          <span class="card-category">
+            ${post.category}
+          </span>
+
+        </div>
+
+
+        <div class="card-body">
+
+          <div class="card-meta">
+
+            <span>
+              <i class="fa-regular fa-calendar"></i>
+              ${post.date}
+            </span>
+
+            <span>•</span>
+
+            <span>
+              <i class="fa-regular fa-clock"></i>
+              ${post.readTime} min read
+            </span>
+
+          </div>
+
+
+          <h3 class="card-title">
+            ${post.title}
+          </h3>
+
+
+          <p class="card-excerpt">
+            ${post.excerpt}
+          </p>
+
+
+          <div class="card-footer">
+
+            <div class="author-badge">
+
+              ${
+                avatarSrc
+
+                ? `
+                  <img
+                    src="${avatarSrc}"
+                    class="author-avatar-img"
+                    alt="${post.author}"
+                  >
+                `
+
+                : `
+                  <div class="author-avatar">
+                    ${(post.author || 'B').charAt(0)}
+                  </div>
+                `
+              }
+
+              <span>
+                ${post.author}
+              </span>
+
+            </div>
+
+
+            <div class="card-actions">
+
+              <button
+                class="action-icon-btn ${post.isLiked ? 'liked' : ''}"
+                onclick="toggleLike(event, '${post.id}')">
+
+                <i
+                  class="${post.isLiked ? 'fa-solid' : 'fa-regular'} fa-heart">
+                </i>
+
+                <span>
+                  ${post.likes || 0}
+                </span>
+
+              </button>
+
+
+              <button
+                class="action-icon-btn"
+                onclick="event.stopPropagation(); showToast('Bookmarked story!')">
+
+                <i class="fa-regular fa-bookmark"></i>
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+      grid.appendChild(card);
+
+    });
+  }
+
+
+  // ------------------------------------------------------------
+  // DASHBOARD
+  // ------------------------------------------------------------
+
+  function renderDashboardTable() {
+
+    const tbody =
+      document.getElementById('dashboard-table-body');
+
+    const totalStat =
+      document.getElementById('stat-total-articles');
+
+    const totalLikesStat =
+      document.getElementById('stat-total-likes');
+
+
+    const totalLikes =
+      blogPosts.reduce(
+        (acc, curr) => acc + (curr.likes || 0),
+        0
+      );
+
+
+    if (totalStat) {
+      totalStat.textContent = blogPosts.length;
+    }
+
+    if (totalLikesStat) {
+      totalLikesStat.textContent = totalLikes;
+    }
+
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+
+    blogPosts.forEach(post => {
+
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td>
+          <strong>${post.title}</strong>
+        </td>
+
+        <td>
+          <span class="badge-tag">
+            ${post.category}
+          </span>
+        </td>
+
+        <td>
+          ${post.author}
+        </td>
+
+        <td>
+          ${post.date}
+        </td>
+
+        <td>
+          <i
+            class="fa-solid fa-heart"
+            style="color: var(--accent-terracotta);">
+          </i>
+          ${post.likes || 0}
+        </td>
+
+        <td>
+
+          <button
+            class="btn-delete"
+            onclick="deletePost('${post.id}')"
+            title="Delete Story">
+
+            <i class="fa-solid fa-trash-can"></i>
+
+          </button>
+
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+
+    });
+  }
+
+
+  // ------------------------------------------------------------
+  // FILTERS
+  // ------------------------------------------------------------
+
+  function filterCategory(category) {
+
+    activeCategoryFilter = category;
+
+    const pills =
+      document.querySelectorAll('.pill');
+
+    pills.forEach(pill => {
+
+      if (
+        pill.textContent.includes(category) ||
+        (
+          category === 'All' &&
+          pill.textContent.includes('All Stories')
+        )
+      ) {
+
+        pill.classList.add('active');
+
+      } else {
+
+        pill.classList.remove('active');
+
+      }
+
+    });
+
+    renderJournalFeed();
+  }
+
+
+  function handleSearch() {
+    renderJournalFeed();
+  }
+
+
+  // ------------------------------------------------------------
+  // LIKE
+  // ------------------------------------------------------------
+
+  function toggleLike(event, postId) {
+
+    event.stopPropagation();
+
+    const post =
+      blogPosts.find(p => p.id === postId);
+
+    if (!post) return;
+
+
+    post.isLiked = !post.isLiked;
+
+    post.likes =
+      (post.likes || 0) +
+      (post.isLiked ? 1 : -1);
+
+
+    const icon =
+      event.currentTarget.querySelector('i');
+
+    if (icon) {
+
+      icon.classList.add('heart-burst');
+
+      setTimeout(() => {
+        icon.classList.remove('heart-burst');
+      }, 400);
+
+    }
+
+
+    savePosts();
+
+    renderJournalFeed();
+    renderDashboardTable();
+
+
+    showToast(
+      post.isLiked
+        ? 'Added to liked stories!'
+        : 'Removed like.'
+    );
+  }
+
+
+  // ------------------------------------------------------------
+  // ARTICLE MODAL
+  // ------------------------------------------------------------
+
+  function openArticleModal(postId) {
+
+    const post =
+      blogPosts.find(p => p.id === postId);
+
+    if (!post) return;
+
+
+    const modal =
+      document.getElementById('article-modal');
+
+    const content =
+      document.getElementById('modal-content');
+
+
+    content.innerHTML = `
+
+      <span class="eyebrow-tag">
+        ${post.category}
+      </span>
+
+      <h1 class="modal-title">
+        ${post.title}
+      </h1>
+
+      <div
+        class="card-meta"
+        style="margin: 1rem 0;">
+
+        <span>
+          By <strong>${post.author}</strong>
+        </span>
+
+        <span>•</span>
+
+        <span>
+          ${post.date}
+        </span>
+
+        <span>•</span>
+
+        <span>
+          ${post.readTime} min read
+        </span>
+
+      </div>
+
+      <img
+        src="${post.image}"
+        class="modal-hero-img"
+        alt="${post.title}"
+        onerror="this.src='https://placehold.co/800x500/E05A47/ffffff?text=Article'"
+      >
+
+      <div class="modal-body">
+        ${post.content || `<p>${post.excerpt}</p>`}
+      </div>
+
+    `;
+
+
+    modal.classList.add('active');
+
+    document.body.style.overflow = 'hidden';
+  }
+
+
+  function closeArticleModal() {
+
+    const modal =
+      document.getElementById('article-modal');
+
+    modal.classList.remove('active');
+
+    document.body.style.overflow = 'auto';
+  }
+
+
+  // ------------------------------------------------------------
+  // LOGIN
+  // ------------------------------------------------------------
+
+  function handleLoginSubmit(event) {
+
+    event.preventDefault();
+
+    const email =
+      document.getElementById('login-email').value;
+
+    isLoggedIn = true;
+
+    if (email) {
+      currentUser.email = email;
+    }
+
+    updateNavAuthUI();
+
+    showToast(
+      `Welcome back, ${currentUser.name}!`
+    );
+
+    switchTab('home');
+  }
+
+
+  // ------------------------------------------------------------
+  // REGISTER
+  // ------------------------------------------------------------
+
+  function handleRegisterSubmit(event) {
+
+    event.preventDefault();
+
+    const name =
+      document.getElementById('reg-name').value;
+
+    const email =
+      document.getElementById('reg-email').value;
+
+    const age =
+      parseInt(
+        document.getElementById('reg-age').value
+      ) || 26;
+
+    const role =
+      document.getElementById('reg-role').value ||
+      'Author';
+
+
+    currentUser = {
+      name,
+      email,
+      age,
+      role,
+      avatar:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+      bio:
+        'Editorial writer and content creator.'
+    };
+
+
+    isLoggedIn = true;
+
+    updateNavAuthUI();
+
+    showToast(
+      `Welcome to the studio, ${name}!`
+    );
+
+    switchTab('home');
+  }
+
+
+  // ------------------------------------------------------------
+  // LOGOUT
+  // ------------------------------------------------------------
+
+  function handleLogout() {
+
+    isLoggedIn = false;
+
+    updateNavAuthUI();
+
+    showToast('Logged out successfully.');
+
+    switchTab('home');
+  }
+
+
+  // ------------------------------------------------------------
+  // PROFILE
+  // ------------------------------------------------------------
+
+  function populateProfileForm() {
+
+    const name =
+      document.getElementById('edit-name');
+
+    const age =
+      document.getElementById('edit-age');
+
+    const role =
+      document.getElementById('edit-role');
+
+    const avatar =
+      document.getElementById('edit-avatar');
+
+    const bio =
+      document.getElementById('edit-bio');
+
+
+    if (name) name.value = currentUser.name || '';
+
+    if (age) age.value = currentUser.age || 26;
+
+    if (role) role.value = currentUser.role || '';
+
+    if (avatar) avatar.value = currentUser.avatar || '';
+
+    if (bio) bio.value = currentUser.bio || '';
+
+
+    const displayName =
+      document.getElementById('profile-display-name');
+
+    const displayRole =
+      document.getElementById('profile-display-role');
+
+    const avatarPreview =
+      document.getElementById('profile-avatar-preview');
+
+
+    if (displayName) {
+      displayName.textContent =
+        currentUser.name || 'Author';
+    }
+
+    if (displayRole) {
+      displayRole.textContent =
+        currentUser.role || 'Writer';
+    }
+
+    if (avatarPreview) {
+      avatarPreview.src = currentUser.avatar;
+    }
+  }
+
+
+  function updateAvatarPreview(url) {
+
+    const img =
+      document.getElementById(
+        'profile-avatar-preview'
+      );
+
+    if (img && url) {
+      img.src = url;
+    }
+  }
+
+
+  function handleProfileSave(event) {
+
+    event.preventDefault();
+
+
+    currentUser.name =
+      document.getElementById('edit-name').value;
+
+    currentUser.age =
+      parseInt(
+        document.getElementById('edit-age').value
+      ) || 26;
+
+    currentUser.role =
+      document.getElementById('edit-role').value;
+
+    currentUser.avatar =
+      document.getElementById('edit-avatar').value;
+
+    currentUser.bio =
+      document.getElementById('edit-bio').value;
+
+
+    updateNavAuthUI();
+
+    renderJournalFeed();
+
+    renderDashboardTable();
+
+    showToast(
+      'Profile information updated!'
+    );
+
+    switchTab('home');
+  }
+
+
+  // ------------------------------------------------------------
+  // CREATE ARTICLE
+  // ------------------------------------------------------------
+
+  function handleCreateBlog(event) {
+
+    event.preventDefault();
+
+
+    if (!isLoggedIn) {
+
+      showToast(
+        'You must be logged in to publish an article.'
+      );
+
+      switchTab('login');
+
+      return;
+    }
+
+
+    const title =
+      document.getElementById('post-title').value;
+
+    const category =
+      document.getElementById('post-category').value;
+
+    const readTime =
+      parseInt(
+        document.getElementById('post-read-time').value
+      ) || 5;
+
+    const image =
+      document.getElementById('post-image').value;
+
+    const excerpt =
+      document.getElementById('post-excerpt').value;
+
+    const content =
+      document.getElementById('post-content').value;
+
+
+    const newPost = {
+
+      id:
+        'article-' +
+        Date.now(),
+
+      title,
+
+      category,
+
+      author:
+        currentUser.name || 'Bhaskar',
+
+      date:
+        'Just now',
+
+      readTime,
+
+      excerpt,
+
+      image,
+
+      likes: 0,
+
+      isLiked: false,
+
+      content:
+        `<p>${content.replace(/\n/g, '<br>')}</p>`,
+
+      createdAt:
+        Date.now()
+    };
+
+
+    blogPosts.unshift(newPost);
+
+    savePosts();
+
+    event.target.reset();
+
+    renderJournalFeed();
+
+    renderDashboardTable();
+
+    showToast(
+      'Story published successfully!'
+    );
+
+    switchTab('home');
+  }
+
+
+  // ------------------------------------------------------------
+  // DELETE ARTICLE
+  // ------------------------------------------------------------
+
+  function deletePost(postId) {
+
+    blogPosts =
+      blogPosts.filter(
+        post => post.id !== postId
+      );
+
+    savePosts();
+
+    renderJournalFeed();
+
+    renderDashboardTable();
+
+    showToast(
+      'Story deleted permanently.'
+    );
+  }
+
+
+  // ------------------------------------------------------------
+  // TOAST
+  // ------------------------------------------------------------
+
+  function showToast(msg) {
+
+    const container =
+      document.getElementById(
+        'toast-container'
+      );
+
+    const toast =
+      document.createElement('div');
+
+    toast.className = 'toast';
+
+    toast.innerHTML = `
+      <i class="fa-solid fa-circle-check"></i>
+      <span>${msg}</span>
+    `;
+
+    container.appendChild(toast);
+
+
+    setTimeout(() => {
+
+      toast.style.opacity = '0';
+
+      toast.style.transform =
+        'translateY(10px)';
+
+      toast.style.transition =
+        'all 0.3s ease';
+
+
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+
+    }, 3000);
+  }
+
+
+  // ============================================================
+  // VISUAL FX & ANIMATIONS
+  // ============================================================
+
+  function initParallaxEffects() {
+
+    document.addEventListener(
+      'mousemove',
+      (e) => {
+
+        const cards =
+          document.querySelectorAll(
+            '.editorial-card'
+          );
+
+
+        cards.forEach(card => {
+
+          const rect =
+            card.getBoundingClientRect();
+
+          const x =
+            e.clientX - rect.left;
+
+          const y =
+            e.clientY - rect.top;
+
+
+          if (
+            x >= 0 &&
+            x <= rect.width &&
+            y >= 0 &&
+            y <= rect.height
+          ) {
+
+            const centerX =
+              rect.width / 2;
+
+            const centerY =
+              rect.height / 2;
+
+            const rotateX =
+              (y - centerY) / 12;
+
+            const rotateY =
+              (centerX - x) / 12;
+
+
+            card.style.transform =
+              `perspective(1000px)
+               rotateX(${rotateX}deg)
+               rotateY(${rotateY}deg)
+               translateY(-6px)`;
+
+
+            const shine =
+              card.querySelector(
+                '.card-shine'
+              );
+
+
+            if (shine) {
+
+              shine.style.background =
+                `radial-gradient(
+                  circle at ${x}px ${y}px,
+                  rgba(255,255,255,0.3) 0%,
+                  transparent 70%
+                )`;
+            }
+
+
+          } else {
+
+            card.style.transform =
+              'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+
+          }
+
+        });
+
+      }
+    );
+  }
+
+
+  function initCustomCursor() {
+
+    const dot =
+      document.getElementById(
+        'cursor-dot'
+      );
+
+    const ring =
+      document.getElementById(
+        'cursor-ring'
+      );
+
+
+    let mouseX = 0;
+    let mouseY = 0;
+
+    let ringX = 0;
+    let ringY = 0;
+
+
+    document.addEventListener(
+      'mousemove',
+      (e) => {
+
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+
+        if (dot) {
+
+          dot.style.left =
+            `${mouseX}px`;
+
+          dot.style.top =
+            `${mouseY}px`;
+
+        }
+
+      }
+    );
+
+
+    function renderRing() {
+
+      ringX +=
+        (mouseX - ringX) * 0.15;
+
+      ringY +=
+        (mouseY - ringY) * 0.15;
+
+
+      if (ring) {
+
+        ring.style.left =
+          `${ringX}px`;
+
+        ring.style.top =
+          `${ringY}px`;
+
+      }
+
+
+      requestAnimationFrame(
+        renderRing
+      );
+    }
+
+
+    renderRing();
+  }
+
+
+  function initScrollProgress() {
+
+    window.addEventListener(
+      'scroll',
+      () => {
+
+        const progressBar =
+          document.getElementById(
+            'reading-progress'
+          );
+
+        const totalHeight =
+          document.documentElement
+            .scrollHeight -
+          window.innerHeight;
+
+
+        const progress =
+          totalHeight > 0
+            ? (window.scrollY / totalHeight) * 100
+            : 0;
+
+
+        if (progressBar) {
+
+          progressBar.style.width =
+            `${progress}%`;
+
+        }
+
+      }
+    );
+  }
+
+
+  function initButtonRipples() {
+
+    document.addEventListener(
+      'click',
+      (e) => {
+
+        const target =
+          e.target.closest(
+            '.btn-primary'
+          );
+
+        if (!target) return;
+
+
+        const rect =
+          target.getBoundingClientRect();
+
+        const circle =
+          document.createElement('span');
+
+
+        const diameter =
+          Math.max(
+            rect.width,
+            rect.height
+          );
+
+        const radius =
+          diameter / 2;
+
+
+        circle.style.width =
+          circle.style.height =
+            `${diameter}px`;
+
+        circle.style.left =
+          `${e.clientX - rect.left - radius}px`;
+
+        circle.style.top =
+          `${e.clientY - rect.top - radius}px`;
+
+
+        circle.classList.add(
+          'ripple-effect'
+        );
+
+
+        const ripple =
+          target.getElementsByClassName(
+            'ripple-effect'
+          )[0];
+
+
+        if (ripple) {
+          ripple.remove();
+        }
+
+
+        target.appendChild(circle);
+      }
+    );
+  }
+
+</script>
+</body>
+</html>
